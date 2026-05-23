@@ -25,30 +25,41 @@
 
 ## 🏗️ Architecture AWS
 
-<!-- Upload cette image dans une Issue GitHub et remplace l'URL -->
-![Architecture AWS](REMPLACE_PAR_URL_ARCHITECTURE)
+![Architecture AWS](https://github.com/user-attachments/assets/17238d87-ad7b-45f5-8a29-058e03d82797)
 
 *Vue complète des services AWS interconnectés — VPC, ECS Fargate, ALB, ECR, RDS, CodePipeline*
 
 ---
 
-## 📸 Aperçu de l'application
+## 💰 Estimation des Coûts & Application Monolithique
 
-### Application Monolithique (État initial)
-<!-- Upload les screenshots dans une Issue GitHub et remplace les URLs -->
-![Monolithic App](REMPLACE_PAR_URL_MONOLITH)
+![Coûts et Monolith](https://github.com/user-attachments/assets/1dc60f84-ec54-4a97-b0f4-f083242bcd21)
 
-### Microservices déployés
-![Customer Microservice port 8080](REMPLACE_PAR_URL_CUSTOMER)
-![Employee Microservice port 8081](REMPLACE_PAR_URL_EMPLOYEE)
+*Analyse détaillée des coûts ($131.28/mois) + état initial de l'application monolithique*
 
 ---
 
-## 🔄 Pipeline CI/CD — Blue/Green
+## 🐳 Microservices & Conteneurisation Docker
 
-![CodePipeline](REMPLACE_PAR_URL_PIPELINE)
+![Docker Microservices](https://github.com/user-attachments/assets/4ba1f292-29d0-440e-a542-cf3475190e77)
 
-*Source → Build → Deploy Blue/Green — 0 downtime garanti*
+*Dockerfile optimisé + Microservice Customer (port 8080) + Microservice Employee (port 8081)*
+
+---
+
+## 🔄 Pipeline CI/CD — Blue/Green Deployment
+
+![Pipeline CI/CD](https://github.com/user-attachments/assets/591227c6-0b0f-4b45-97af-2d9e767a8989)
+
+*CodePipeline → CodeDeploy → ECS Fargate — déploiement Blue/Green sans downtime*
+
+---
+
+## 🏆 Accomplissements — Projet Achevé
+
+![Résultats](https://github.com/user-attachments/assets/b418827d-38be-4617-902a-c53495b5a3c3)
+
+*100% succès · 99.9%+ disponibilité · 7 min déploiement · 12 services AWS*
 
 ---
 
@@ -81,7 +92,7 @@ Phase 9 — Optimisation & Sécurité (IAM + Security Groups)
 | Service | Rôle | Coût/mois |
 |---------|------|-----------|
 | EC2 Cloud9 (t3.small) | IDE développement | $29.20 |
-| ECS Fargate (2 services, 2vCPU, 4GB) | Orchestration conteneurs | $58.40 |
+| ECS Fargate (2vCPU, 4GB) | Orchestration conteneurs | $58.40 |
 | Application Load Balancer | Distribution du trafic | $22.00 |
 | RDS MySQL (db.t3.micro) | Base de données | $15.68 |
 | CodeCommit | Repositories Git | $1.00 |
@@ -99,20 +110,15 @@ Phase 9 — Optimisation & Sécurité (IAM + Security Groups)
 ```
 ┌─────────────────────────────────────────────────────┐
 │                    AWS Cloud VPC                     │
-│                                                      │
 │  ┌──────────────────────────────────────────────┐   │
 │  │         Application Load Balancer             │   │
-│  │              microservicesLB                  │   │
 │  └────────────┬─────────────────┬───────────────┘   │
-│               │                 │                    │
-│        /admin/*           /* (default)               │
+│         /admin/*           /* (default)              │
 │               ↓                 ↓                    │
 │  ┌────────────────┐   ┌────────────────┐            │
 │  │    Employee     │   │    Customer    │            │
-│  │  Microservice  │   │  Microservice  │            │
 │  │   port 8081    │   │   port 8080    │            │
 │  └────────────────┘   └────────────────┘            │
-│               ↓                 ↓                    │
 │  ┌──────────────────────────────────────────────┐   │
 │  │              RDS MySQL (db.t3.micro)          │   │
 │  └──────────────────────────────────────────────┘   │
@@ -121,66 +127,20 @@ Phase 9 — Optimisation & Sécurité (IAM + Security Groups)
 
 ---
 
-## 🚀 Déploiement Blue/Green
-
-| Target Group | Port | Rôle |
-|-------------|------|------|
-| customer-tg-one | 8080 | Blue Environment |
-| customer-tg-two | 8080 | Green Environment |
-| employee-tg-one | 8080 | Blue Environment |
-| employee-tg-two | 8080 | Green Environment |
-
-**Processus de déploiement :**
-1. 🔵 Déploiement sur l'environnement **Green** (nouveau)
-2. ✅ Tests de validation automatiques
-3. 🔄 Transfert de **100% du trafic** vers Green
-4. 🗑️ Suppression de l'ancien environnement **Blue**
-
----
-
-## 📦 Structure du projet
-
-```
-microservices/
-├── customer/               # Microservice clients (port 8080)
-│   ├── app/
-│   ├── views/
-│   ├── index.js
-│   ├── Dockerfile
-│   └── package.json
-├── employee/               # Microservice employés (port 8081)
-│   ├── app/
-│   ├── views/
-│   ├── index.js
-│   ├── Dockerfile
-│   └── package.json
-└── README.md
-```
-
----
-
 ## 🔒 Sécurité
 
-- **IAM** : Rôles et permissions minimales (principe du moindre privilège)
-- **Security Groups** : Accès restreint par IP source (`/admin/*`)
+- **IAM** : Rôles et permissions minimales
+- **Security Groups** : Accès restreint par IP source
 - **VPC** : Réseau isolé avec sous-réseaux publics/privés
 - **ECR** : Registry privé pour les images Docker
-- **Healthcheck** : Vérification automatique de santé des conteneurs
-
----
-
-## 📊 Monitoring
-
-- **CloudWatch** : Logs centralisés + métriques temps réel
-- **ECS Health Checks** : Surveillance automatique des tâches
-- **ALB Access Logs** : Journalisation de tout le trafic entrant
+- **Healthcheck** : Vérification automatique des conteneurs
 
 ---
 
 ## 👤 Auteur
 
-**Firdaws Masrour** — 3IACN2/Groupe2  
-Encadrant : Marwa Boumaiz | Amazon Web Services — Projet Académique Certifié  
+**Firdaws Masrour** — 3IACN2/Groupe2
+Encadrant : Marwa Boumaiz | Amazon Web Services — Projet Académique Certifié
 📅 28 décembre 2025
 
 ---
